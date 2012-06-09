@@ -1,0 +1,38 @@
+/*
+.opennms-outage {
+	width: 100%;
+	margin: 0;
+	list-style-type: none;
+	padding: 0px;
+}
+
+.opennms-outage li {
+	padding: 5px;
+	border-bottom: 1px solid #cccccc;
+}
+
+.opennms-outage .opennms-header {
+	font-size: xx-large;
+}
+
+.opennms-left {
+	text-align: left;
+}
+
+.opennms-outage .opennms-header .opennms-left {
+	width: auto;
+}
+
+.opennms-right {
+	float: right;
+}
+
+.opennms-outage .opennms-header .opennms-right {
+	width: auto;
+	font-size: medium;
+}
+
+.opennms-outage .serviceName:before {
+	content: "/";
+}
+*/
