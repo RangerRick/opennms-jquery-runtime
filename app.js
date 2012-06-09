@@ -7,6 +7,7 @@ var refresh = function(cache) {
 			$("#outage-list").append("<li><a href=\"#node-" + outage.serviceLostEvent.nodeId + "\">" + outage.toListItem() + "</a></li>");
 			$("#outage-list").listview('refresh');
 		}
+		jQuery("abbr.timeago").timeago();
 	}, cache);
 }
 

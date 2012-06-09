@@ -3,7 +3,7 @@ var Outages = function() {
 		return "" +
 			"<h3>" + this.ipAddress + "/" + this.monitoredService.serviceType.name + "</h3>" +
 			"<p>" + this.serviceLostEvent.logMessage + "</p>" +
-			"<p class=\"ui-li-aside\">" + this.ifLostService + "</p>";
+			"<p class=\"ui-li-aside\"><abbr class=\"timeago\" title=\"" + this.ifLostService + "\">" + parseDate(this.ifLostService) + "</abbr></p>";
 	};
 
 	this.init = function() {
@@ -27,7 +27,8 @@ var Outages = function() {
 			}
 		}).done(function(data) {
 			for (var outageIndex in data.outage) {
-				data.outage[outageIndex].toListItem = formatOutageListItem;
+				var outage = data.outage[outageIndex];
+				outage.toListItem = formatOutageListItem;
 			}
 			callback(data);
 		});
