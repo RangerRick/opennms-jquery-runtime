@@ -1,3 +1,15 @@
+if (typeof String.prototype.startsWith != 'function') {
+  String.prototype.startsWith = function (str){
+    return this.slice(0, str.length) == str;
+  };
+}
+
+if (typeof String.prototype.endsWith != 'function') {
+  String.prototype.endsWith = function (str){
+    return this.slice(-str.length) == str;
+  };
+}
+
 var parseDate = function(dateString) {
 	var parts = dateString.match(/^(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d):(\d\d):([\d\.]+)([\+\-](\d\d):(\d\d))?$/);
 	var year = parts[1];
@@ -14,7 +26,15 @@ var parseDate = function(dateString) {
 		milliseconds = secondParts[2];
 	}
 
-	console.log("year = " + year + ", month = " + month + ", day = " + day + ", hours = " + hours + ", minutes = " + minutes + ", seconds = " + seconds + ", milliseconds = " + milliseconds);
+	// console.log("year = " + year + ", month = " + month + ", day = " + day + ", hours = " + hours + ", minutes = " + minutes + ", seconds = " + seconds + ", milliseconds = " + milliseconds);
 	var date = new Date(year, month, day, hours, minutes, seconds, milliseconds);
 	return date;
+}
+
+var getUrl = function(fragment) {
+	if (fragment.startsWith("/")) {
+		return "json" + fragment + ".json";
+	} else {
+		return "json" + "/" + fragment + ".json";
+	}
 }

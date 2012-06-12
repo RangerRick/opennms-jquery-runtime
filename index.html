@@ -8,35 +8,20 @@
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile.structure-1.1.0.min.css" />
 		<link rel="stylesheet" href="app.css" />
 		<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+		<!-- <script src="jquerymobile-router/js/jquery.mobile.router.min.js"></script> -->
+		<script src="jquerymobile-router/js/jquery.mobile.router.js"></script>
 		<script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
-		<style>	
-			.opennms-tabs .ui-btn .ui-btn-inner { padding-top: 40px !important; }
-			.opennms-tabs .ui-btn .ui-icon { width: 30px!important; height: 30px!important; margin-left: -15px !important; box-shadow: none!important; -moz-box-shadow: none!important; -webkit-box-shadow: none!important; -webkit-border-radius: 0 !important; border-radius: 0 !important; }
-
-			/* Non-Retina */
-			@media screen and (-webkit-max-device-pixel-ratio: 1) {
-				#onms-outages .ui-icon { background:  url(images/icons/icons-white/77-ekg.png)     50% 50% no-repeat; background-size: 26px 22px; }
-				#onms-alarms  .ui-icon { background:  url(images/icons/icons-white/11-clock.png)   50% 50% no-repeat; background-size: 25px 25px; }
-				#onms-nodes   .ui-icon { background:  url(images/icons/icons-white/69-display.png) 50% 50% no-repeat; background-size: 22px 20px; }
-				#onms-logo    .ui-icon { background:  url(images/o.png)                            50% 50% no-repeat; background-size: 32px 32px; }
-			}
-
-			/* Retina */
-			@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5) {
-					#onms-outages .ui-icon { background:  url(images/icons/icons-white/77-ekg@2x.png)     50% 50% no-repeat; background-size: 26px 22px; }
-					#onms-alarms  .ui-icon { background:  url(images/icons/icons-white/11-clock@2x.png)   50% 50% no-repeat; background-size: 25px 25px; }
-					#onms-nodes   .ui-icon { background:  url(images/icons/icons-white/69-display@2x.png) 50% 50% no-repeat; background-size: 22px 20px; }
-					#onms-logo    .ui-icon { background:  url(images/o@2x.png)                            50% 50% no-repeat; background-size: 32px 32px; }
-			}
-		</style>
 		<script src="util.js"></script>
 		<script src="jquery.timeago.js"></script>
 		<script src="outages.js"></script>
 		<script src="nodes.js"></script>
 		<script src="app.js"></script>
 		<script>
+			var router = new $.mobile.Router([
+				{ "#node-detail[?](.*)": { handler: initializeNodeDetails, events: "bs,h" } }
+			]);
 			$(document).ready(function() {
-				startup();
+				refresh(true);
 			});
 		</script>
 	</head>
@@ -52,21 +37,23 @@
 			<div data-role="footer" class="opennms-tabs" data-theme="b" data-position="fixed">
 				<div data-role="navbar" class="opennms-tabs" data-grid="c">
 				<ul>
-					<li><a href="#" id="onms-outages" data-icon="custom">Outages</a></li>
-					<li><a href="#" id="onms-alarms"  data-icon="custom">Alarms</a></li>
-					<li><a href="#" id="onms-nodes"   data-icon="custom">Nodes</a></li>
-					<li><a href="#" id="onms-logo"    data-icon="custom">About</a></li>
+					<li><a href="#outages" id="onms-outages" data-icon="custom">Outages</a></li>
+					<li><a href="#alarms"  id="onms-alarms"  data-icon="custom">Alarms</a></li>
+					<li><a href="#nodes"   id="onms-nodes"   data-icon="custom">Nodes</a></li>
+					<li><a href="#about"   id="onms-logo"    data-icon="custom">About</a></li>
 				</ul>
 				</div>
 			</div>
 		</div>
-		<div id="node" data-role="page" data-theme="a">
+		<div id="node-detail" data-role="page" data-theme="a">
 			<div data-role="header" data-position="fixed">
 				<h1 id="node-title">Node</h1>
 			</div>
 			<div data-role="content" data-theme="a">
-				<ul id="node-list" data-role="listview" data-theme="a">
+				<!--
+				<ul id="node-list" data-role="listview" data-theme="a" data-divider-theme="b">
 				</ul>
+				-->
 			</div>
 			<div data-role="footer" class="opennms-tabs" data-theme="b" data-position="fixed">
 				<div data-role="navbar" class="opennms-tabs" data-grid="c">

@@ -1,13 +1,22 @@
 var Outages = function() {
-	var formatOutageListItem = function() {
+	var me = this;
+
+	var _formatOutageListItem = function() {
 		return "" +
 			"<h3>" + this.ipAddress + "/" + this.monitoredService.serviceType.name + "</h3>" +
 			"<p>" + this.serviceLostEvent.logMessage + "</p>" +
 			"<p class=\"ui-li-aside\"><abbr class=\"timeago\" title=\"" + this.ifLostService + "\">" + parseDate(this.ifLostService) + "</abbr></p>";
 	};
 
-	this.init = function() {
-		
+	this.processOutages = function(data) {
+		if (!$.isArray(data.outage)) {
+			data.outage = [data.outage];
+		}
+		for (var outageIndex in data.outage) {
+			var outage = data.outage[outageIndex];
+			outage.toListItem = _formatOutageListItem;
+		}
+		return data;
 	};
 
 	this.getOutages = function(callback, cache) {
@@ -16,7 +25,7 @@ var Outages = function() {
 		}
 
 		$.ajax({
-			url: "/opennms/rest/outages",
+			url: getUrl("outages"),
 			cache: cache,
 			dataType: "json",
 			data: {
@@ -26,13 +35,7 @@ var Outages = function() {
 				ifRegainedService: "null"
 			}
 		}).done(function(data) {
-			for (var outageIndex in data.outage) {
-				var outage = data.outage[outageIndex];
-				outage.toListItem = formatOutageListItem;
-			}
-			callback(data);
+			callback(me.processOutages(data));
 		});
 	};
-
-	this.init();
 }
