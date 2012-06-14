@@ -5,25 +5,17 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>OpenNMS</title>
 		<link rel="stylesheet" href="themes/OpenNMS.min.css" />
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile.structure-1.1.0.min.css" />
+		<link rel="stylesheet" href="jquery.mobile.structure-1.1.0.min.css" />
 		<link rel="stylesheet" href="app.css" />
-		<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+		<script src="jquery-1.7.2.min.js"></script>
 		<!-- <script src="jquerymobile-router/js/jquery.mobile.router.min.js"></script> -->
 		<script src="jquerymobile-router/js/jquery.mobile.router.js"></script>
-		<script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+		<script src="jquery.mobile-1.1.0.min.js"></script>
 		<script src="util.js"></script>
 		<script src="jquery.timeago.js"></script>
 		<script src="outages.js"></script>
 		<script src="nodes.js"></script>
 		<script src="app.js"></script>
-		<script>
-			var router = new $.mobile.Router([
-				{ "#node-detail[?](.*)": { handler: initializeNodeDetails, events: "bs,h" } }
-			]);
-			$(document).ready(function() {
-				refresh(true);
-			});
-		</script>
 	</head>
 	<body>
 		<div id="outages" data-role="page" data-theme="a">
@@ -37,31 +29,65 @@
 			<div data-role="footer" class="opennms-tabs" data-theme="b" data-position="fixed">
 				<div data-role="navbar" class="opennms-tabs" data-grid="c">
 				<ul>
-					<li><a href="#outages" id="onms-outages" data-icon="custom">Outages</a></li>
-					<li><a href="#alarms"  id="onms-alarms"  data-icon="custom">Alarms</a></li>
-					<li><a href="#nodes"   id="onms-nodes"   data-icon="custom">Nodes</a></li>
-					<li><a href="#about"   id="onms-logo"    data-icon="custom">About</a></li>
+					<li><a href="#outages" class="onms-outages ui-btn-active ui-state-persist" data-icon="custom">Outages</a></li>
+					<li><a href="#alarms"  class="onms-alarms"  data-icon="custom">Alarms</a></li>
+					<li><a href="#nodes"   class="onms-nodes"   data-icon="custom">Nodes</a></li>
+					<li><a href="#about"   class="onms-logo"    data-icon="custom">About</a></li>
 				</ul>
 				</div>
 			</div>
 		</div>
-		<div id="node-detail" data-role="page" data-theme="a">
+		<div id="alarms" data-role="page" data-theme="a">
 			<div data-role="header" data-position="fixed">
-				<h1 id="node-title">Node</h1>
+				<h1>Alarms</h1>
 			</div>
 			<div data-role="content" data-theme="a">
-				<!--
-				<ul id="node-list" data-role="listview" data-theme="a" data-divider-theme="b">
+				<ul id="alarm-list" data-role="listview" data-theme="a">
 				</ul>
-				-->
 			</div>
 			<div data-role="footer" class="opennms-tabs" data-theme="b" data-position="fixed">
 				<div data-role="navbar" class="opennms-tabs" data-grid="c">
 				<ul>
-					<li><a href="#" id="onms-outages" data-icon="custom">Outages</a></li>
-					<li><a href="#" id="onms-alarms"  data-icon="custom">Alarms</a></li>
-					<li><a href="#" id="onms-nodes"   data-icon="custom">Nodes</a></li>
-					<li><a href="#" id="onms-logo"    data-icon="custom">About</a></li>
+					<li><a href="#outages" class="onms-outages" data-icon="custom">Outages</a></li>
+					<li><a href="#alarms"  class="onms-alarms ui-btn-active ui-state-persist"  data-icon="custom">Alarms</a></li>
+					<li><a href="#nodes"   class="onms-nodes"   data-icon="custom">Nodes</a></li>
+					<li><a href="#about"   class="onms-logo"    data-icon="custom">About</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>
+		<div id="outages-node-detail" data-role="page" data-theme="a" data-add-back-btn="true">
+			<div data-role="header" data-position="fixed">
+				<a href="#outages" data-icon="arrow-l" data-theme="b">Back</a>
+				<h1>Node</h1>
+			</div>
+			<div data-role="content" data-theme="a">
+			</div>
+			<div data-role="footer" class="opennms-tabs" data-theme="b" data-position="fixed">
+				<div data-role="navbar" class="opennms-tabs" data-grid="c">
+				<ul>
+					<li><a href="#outages" class="onms-outages" data-icon="custom">Outages</a></li>
+					<li><a href="#alarms"  class="onms-alarms"  data-icon="custom">Alarms</a></li>
+					<li><a href="#nodes"   class="onms-nodes"   data-icon="custom">Nodes</a></li>
+					<li><a href="#about"   class="onms-logo"    data-icon="custom">About</a></li>
+				</ul>
+				</div>
+			</div>
+		</div>
+		<div id="nodes-node-detail" data-role="page" data-theme="a" data-add-back-btn="true">
+			<div data-role="header" data-position="fixed">
+				<a href="#nodes" data-icon="arrow-l" data-theme="b">Back</a>
+				<h1>Node</h1>
+			</div>
+			<div data-role="content" data-theme="a">
+			</div>
+			<div data-role="footer" class="opennms-tabs" data-theme="b" data-position="fixed">
+				<div data-role="navbar" class="opennms-tabs" data-grid="c">
+				<ul>
+					<li><a href="#outages" class="onms-outages" data-icon="custom">Outages</a></li>
+					<li><a href="#alarms"  class="onms-alarms"  data-icon="custom">Alarms</a></li>
+					<li><a href="#nodes"   class="onms-nodes"   data-icon="custom">Nodes</a></li>
+					<li><a href="#about"   class="onms-logo"    data-icon="custom">About</a></li>
 				</ul>
 				</div>
 			</div>

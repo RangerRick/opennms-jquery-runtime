@@ -5,7 +5,7 @@ var Outages = function() {
 		return "" +
 			"<h3>" + this.ipAddress + "/" + this.monitoredService.serviceType.name + "</h3>" +
 			"<p>" + this.serviceLostEvent.logMessage + "</p>" +
-			"<p class=\"ui-li-aside\"><abbr class=\"timeago\" title=\"" + this.ifLostService + "\">" + parseDate(this.ifLostService) + "</abbr></p>";
+			"<p class=\"ui-li-aside\"><abbr class=\"timeago\" title=\"" + this.ifLostService + "\">" + $.timeago(this.ifLostService) + "</abbr></p>";
 	};
 
 	this.processOutages = function(data) {
