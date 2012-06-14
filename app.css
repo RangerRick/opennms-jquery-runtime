@@ -16,3 +16,12 @@
 	.onms-nodes   .ui-icon { background:  url(images/icons/icons-white/69-display@2x.png) 50% 50% no-repeat; background-size: 22px 20px; }
 	.onms-logo    .ui-icon { background:  url(images/o@2x.png)                            50% 50% no-repeat; background-size: 32px 32px; }
 }
+
+.ui-content .opennms-node-template .ui-listview {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+#outages-node-detail .ui-content {
+	padding-bottom: 0px;
+}

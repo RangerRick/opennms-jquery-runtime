@@ -1,8 +1,11 @@
 var outages = new Outages();
+var alarms  = new Alarms();
 var nodes   = new Nodes();
+
 var tabState = {
 	outages: { pageId: "outages", url: "#outages" },
-	nodes: { pageId: "nodes", url: "#nodes" }
+	nodes:   { pageId: "nodes",   url: "#nodes" },
+	alarms:  { pageId: "alarms",  url: "#alarms" }
 };
 
 $.mobile.defaultPageTransition = 'none';
@@ -81,9 +84,26 @@ var defaultHandler = function( eventType, matchObj, ui, toPage, evt ) {
 					}
 				}
 			}
+			if (toId.startsWith("alarms")) {
+				if (fromId.startsWith("alarms")) {
+					// changing nodes tab state
+					console.log("saving state for alarms");
+					tabState.alarms = { pageId: toId, url: matchObj[0] };
+				} else {
+					// going back to the alarms tab from elsewhere, restore state
+					console.log("pageId = " + tabState.alarms.pageId + ", toId = " + toId);
+					if (tabState.alarms.pageId != toId) {
+						evt.preventDefault();
+						// evt.stopPropagation();
+						$.mobile.changePage(tabState.alarms.url);
+					} else {
+						return;
+					}
+				}
+			}
 		}
 	}
-}
+};
 
 var initializeNodeDetails = function( eventType, matchObj, ui, page, evt ) {
 	/*
@@ -119,13 +139,17 @@ var initializeNodeDetails = function( eventType, matchObj, ui, page, evt ) {
 		$nodeContent.html(template);
 		nodes.updateNode(nodeId, page, true);
 	}
-}
+};
+
+var initializeAlarmDetails = function( eventType, matchObj, ui, page, evt ) {
+	
+};
 
 var refresh = function( cache ) {
 	outages.getOutages(function( data ) {
 		var $outageList = $("#outage-list");
 		if (!data) {
-			console.log("data is empty");
+			console.log("alarm data is empty");
 			return;
 		}
 		for (var outage in data.outage) {
@@ -139,13 +163,32 @@ var refresh = function( cache ) {
 			// $outageList.listview();
 		}
 	}, cache);
-}
+	alarms.getAlarms(function( data ) {
+		var $alarmList = $("#alarm-list");
+		if (!data) {
+			console.log("alarm data is empty");
+			return;
+		}
+		for (var alarm in data.alarm) {
+			alarm = data.alarm[alarm];
+			$alarmList.append("<li><a href=\"#alarms-detail?alarmId=" + alarm["@id"] + "\">" + alarm.toListItem() + "</a></li>");
+		}
+		if ($alarmList.hasClass('ui-listview')) {
+			$alarmList.listview( 'refresh' );
+		} else {
+			console.log("warning: not yet initialized");
+			// $alarmList.listview();
+		}
+	}, cache);
+};
 
 var router = new $.mobile.Router([
 	{ "#(outages)-node-detail[?](.*)": { handler: initializeNodeDetails, events: "bs,s,h"    } },
 	{ "#(nodes)-node-detail[?](.*)":   { handler: initializeNodeDetails, events: "bs,s,h"    } },
+	{ "#(alarms)-detail[?](.*)":       { handler: initializeAlarmDetails, events: "bs,s,h"   } },
 	{ "^\\#([^?]*)([?].*?)?$":         { handler: defaultHandler,        events: "bC,bl,l,bc,c,bs,s,bh,h,i,rm" } }
 ]);
+
 $(document).ready(function() {
 	refresh(true);
 });

@@ -41,13 +41,23 @@ var Nodes = function() {
 		return item;
 	};
 
+	var formatEventListItem = function() {
+		var item = "<h3>" + this.uei.replace("uei.opennms.org/", "") + "</h3>" +
+			this.description +
+			"<p class=\"ui-li-aside\"><abbr class=\"timeago\" title=\"" + this.time + "\">" + $.timeago(this.time) + "</abbr></p>";
+
+		return item;
+	};
+
 	this.getTemplate = function(id) {
 		return "" +
 			"<h3 id=\"node-label\">Node #" + id + "</h3>" +
+			"<div class=\"opennms-node-template\">" +
 			"<div id=\"node-outages\"></div>" +
 			"<div id=\"node-ipInterfaces\"></div>" +
 			"<div id=\"node-snmpInterfaces\"></div>" +
-			"<div id=\"node-events\"></div>";
+			"<div id=\"node-events\"></div>" +
+			"</div>";
 	};
 
 	this._updateContents = function(page, id, contents) {
@@ -55,8 +65,10 @@ var Nodes = function() {
 		element.html(contents);
 		element.find(':jqmData(role=listview)').each(function(item) {
 			if ($(this).hasClass('ui-listview')) {
+				console.log("refreshing listview for " + id);
 				$(this).listview( 'refresh' );
 			} else {
+				console.log("initializing listview for " + id);
 				$(this).listview();
 			}
 		});
@@ -127,6 +139,27 @@ var Nodes = function() {
 		this._updateContents(page, "#node-snmpInterfaces", contents);
 	};
 
+	this._updateEventInfo = function(page, data) {
+		if (!$.isArray(data["event"])) {
+			data["event"] = [data["event"]];
+		}
+		
+		if (data["event"].length == 0) {
+			return;
+		}
+		
+		var contents = "<ul data-role=\"listview\" data-theme=\"a\">" +
+			"<li data-role=\"list-divider\">Events</li>";
+			
+		for (var eventIndex in data["event"]) {
+			var eventItem = data["event"][eventIndex];
+			eventItem.toListItem = formatEventListItem;
+			contents += "<li>" + eventItem.toListItem() + "</li>";
+		}
+		contents += "</ul>";
+		
+		this._updateContents(page, "#node-events", contents);
+	}
 	this.updateNode = function(nodeId, page, cache) {
 		if (cache === undefined) {
 			cache = true;
@@ -160,9 +193,7 @@ var Nodes = function() {
 			url: getUrl("nodes/" + nodeId + "/ipinterfaces"),
 			cache: cache,
 			dataType: "json",
-			data: {
-				orderBy: [ "ipHostName", "ipAddress" ]
-			}
+			data: "orderBy=ipHostName&orderBy=ipAddress"
 		}).done(function(data) {
 			me._updateIpInterfaceInfo(page, data);
 		});
@@ -172,11 +203,19 @@ var Nodes = function() {
 			url: getUrl("nodes/" + nodeId + "/snmpinterfaces"),
 			cache: cache,
 			dataType: "json",
-			data: {
-				orderBy: [ "ifName", "ipAddress", "ifDesc" ]
-			}
+			data: "orderBy=ifName&orderBy=ipAddress&orderBy=ifDesc"
 		}).done(function(data) {
 			me._updateSnmpInterfaceInfo(page, data);
+		});
+
+		console.log("updateEventInfo");
+		$.ajax({
+			url: getUrl("events"),
+			cache: cache,
+			dataType: "json",
+			data: "limit=10&node.id=" + nodeId
+		}).done(function(data) {
+			me._updateEventInfo(page, data);
 		});
 	};
 

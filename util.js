@@ -32,9 +32,11 @@ var parseDate = function(dateString) {
 }
 
 var getUrl = function(fragment) {
+	// var baseUrl = "json", suffix = ".json";
+	var baseUrl = "http://demo:demo@demo.opennms.org/opennms/rest", suffix = "";
 	if (fragment.startsWith("/")) {
-		return "json" + fragment + ".json";
+		return baseUrl + fragment + suffix;
 	} else {
-		return "json" + "/" + fragment + ".json";
+		return baseUrl + "/" + fragment + suffix;
 	}
 }
