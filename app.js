@@ -189,8 +189,6 @@ var router = new $.mobile.Router([
 	{ "^\\#([^?]*)([?].*?)?$":         { handler: defaultHandler,        events: "bC,bl,l,bc,c,bs,s,bh,h,i,rm" } }
 ]);
 
-window.addEventListener('load', function () {
-    document.addEventListener('deviceready', function () {
-		refresh(true);
-    }, false);
-}, false);
+$( document ).bind( "deviceready", function() {
+	refresh(true);
+});
